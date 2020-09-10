@@ -7,7 +7,8 @@ points = {
 
 words_and_answers = [
   {"word": "house", "answers": ["hoe", "sue", "hue", "she", "use", "shoe", "hoes", "hues", "hose", "house"]},
-  {"word": "noodle", "answers": ["nod", "end", "loo", "one", "ode", "led", "eon", "den", "don", "old", "doe", "ole", "dole", "lend", "lone", "noel", "done", "lode", "node", "loon", "olden", "noodle"]}
+  {"word": "noodle", "answers": ["nod", "end", "loo", "one", "ode", "led", "eon", "den", "don", "old", "doe", "ole", "dole", "lend", "lone", "noel", "done", "lode", "node", "loon", "olden", "noodle"]},
+  {"word": "forest", "answers": ["forest", "fortes", "foster", "softer", "fores", "forte", "forts", "frets", "frost", "store", "foes", "fore", "fort", "fret", "ores", "rest", "rose", "rote", "rots", "soft", "sore", "sort", "toes", "tore", "foe", "for", "fro", "ore", "rot", "set", "toe"]}
 ]
 
 # Generates a randomly scrambled version of the input word
@@ -118,14 +119,17 @@ def play_level(master_word, answers):
       print("\n~~~~~~~~~~~~~~~~~~~~~~~")
       break
 
+  return player_input
+
 def setup_level(n):
   master_word = scramble_word(words_and_answers[n]["word"])
   answers = words_and_answers[n]["answers"]
 
   points['total possible'] += calculate_possible_points(answers)
 
-  print(f"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEVEL {n} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-  play_level(master_word, answers)
+  print(f"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEVEL {n + 1} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+  player_input = play_level(master_word, answers)
+  return player_input
 
 ############# GAME INTRO ############
 
@@ -140,14 +144,15 @@ total_possible_points = 0
 
 while True:
   ready = input("Enter 'P' when you're ready to play! ")
-
   if ready.upper() == "P":
     break
 
 ############# RUN LEVELS ############
 
-correct_guesses = []
-setup_level(0)
-
-correct_guesses =  []
-setup_level(1)
+n = 0
+while n < 3:
+  correct_guesses = []
+  player_input = setup_level(n)
+  if player_input == 'q':
+    break
+  n += 1
