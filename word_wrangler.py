@@ -1,5 +1,15 @@
 import random
 
+points = {
+  "player": 0,
+  "total possible": 0
+}
+
+words_and_answers = [
+  {"word": "house", "answers": ["hoe", "sue", "hue", "she", "use", "shoe", "hoes", "hues", "hose", "house"]},
+  {"word": "noodle", "answers": ["nod", "end", "loo", "one", "ode", "led", "eon", "den", "don", "old", "doe", "ole", "dole", "lend", "lone", "noel", "done", "lode", "node", "loon", "olden", "noodle"]}
+]
+
 # Generates a randomly scrambled version of the input word
 def scramble_word(word):
   chars = list(word)
@@ -42,17 +52,16 @@ def display_menu():
   print("\n--------------------\n")
 
 # Displays current master word and player points, and calls the display_words function as many times as necessary, beginning with hidden words of length 3
-def display_progress(master_word, answers, current_points):
+def display_progress(master_word, answers):
   print("\n--------------------\n")
   print(f"Your scrambled master word is: '{master_word}'")
-  print(f"\nYour points: {current_points}")
+  print(f"\nYour points: {points['player']}")
 
   length = 3
   while length <= len(master_word):
     print(f"\nHIDDEN {length}-LETTER WORDS:")
     display_words(length, answers)
     length += 1
-
 
 # Appends a random word from the answers list to the correct_guesses list
 # Does this by generating a randint to use as a index from answers list
@@ -76,11 +85,10 @@ def calculate_possible_points(answers):
 # Runs each level, asking player for input and responding accordingly
 # Originally had a separate function for player input, but ran into trouble with scope and variables, particularly for player points, and figuring out how to break the loop if the player quits or beats the level.
 # Each time play_level is called, it also updates the player's point total, so their points will be tracked level to level.
-def play_level(master_word, answers, player_points):
-  current_points = player_points
+def play_level(master_word, answers):
 
   while True:
-    display_progress(master_word, answers, current_points)
+    display_progress(master_word, answers)
     display_menu()
     player_input = input(">> ").lower()
 
@@ -92,12 +100,12 @@ def play_level(master_word, answers, player_points):
     elif player_input == "r":
       print("\nRevealing a random hidden word...")
       random_word = reveal_random_word(answers)
-      current_points -= len(random_word)
+      points['player'] -= len(random_word)
     elif player_input in correct_guesses:
       print("\nAlready got that one...")
     elif player_input in answers:
       correct_guesses.append(player_input)
-      current_points += len(player_input)
+      points['player'] += len(player_input)
       print("\nCorrect!")
     else:
       print("\n Try again!\n")
@@ -106,12 +114,18 @@ def play_level(master_word, answers, player_points):
       display_progress(master_word, answers, current_points)
       print("\n~~~~~~~~~~~~~~~~~~~~~~~\n")
       print("LEVEL COMPLETE!")
-      print(f"\nYour score: {current_points} out of {total_possible_points} possible points")
+      print(f"\nYour score: {points['player']} out of {points['total possible']} possible points")
       print("\n~~~~~~~~~~~~~~~~~~~~~~~")
       break
 
-  return current_points
+def setup_level(n):
+  master_word = scramble_word(words_and_answers[n]["word"])
+  answers = words_and_answers[n]["answers"]
 
+  points['total possible'] += calculate_possible_points(answers)
+
+  print(f"\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEVEL {n} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+  play_level(master_word, answers)
 
 ############# GAME INTRO ############
 
@@ -130,32 +144,10 @@ while True:
   if ready.upper() == "P":
     break
 
-
-
-
-############ LEVEL ONE - "house" #############
-
-level1_master_word = scramble_word("house")
-level1_answers = ["hoe", "sue", "hue", "she", "use", "shoe", "hoes", "hues", "hose", "house"]
-
-total_possible_points += calculate_possible_points(level1_answers)
+############# RUN LEVELS ############
 
 correct_guesses = []
+setup_level(0)
 
-print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEVEL 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-player_points = play_level(level1_master_word, level1_answers, player_points)
-
-
-
-
-############### LEVEL TWO - "noodle" #############
-
-level2_master_word = scramble_word("noodle")
-level2_answers = ["nod", "end", "loo", "one", "ode", "led", "eon", "den", "don", "old", "doe", "ole", "dole", "lend", "lone", "noel", "done", "lode", "node", "loon", "olden", "noodle"]
-
-total_possible_points += calculate_possible_points(level2_answers)
-
-correct_guesses = []
-
-print("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEVEL 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-player_points = play_level(level2_master_word, level2_answers, player_points)
+correct_guesses =  []
+setup_level(1)
