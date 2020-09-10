@@ -12,7 +12,7 @@ words_and_answers = [
 ]
 
 # Generates a randomly scrambled version of the input word
-def scramble_word(word):
+def scramble(word):
   chars = list(word)
   random.shuffle(chars)
   scrambled = ''
@@ -97,7 +97,8 @@ def play_level(master_word, answers):
       print("\nThanks for playing!")
       break
     elif player_input == "s":
-      pass
+      print("\nScrambling...")
+      master_word = scramble(master_word)
     elif player_input == "r":
       print("\nRevealing a random hidden word...")
       random_word = reveal_random_word(answers)
@@ -109,7 +110,7 @@ def play_level(master_word, answers):
       points['player'] += len(player_input)
       print("\nCorrect!")
     else:
-      print("\n Try again!\n")
+      print("\n Try again!")
 
     if len(correct_guesses) == len(answers):
       display_progress(master_word, answers)
@@ -122,7 +123,7 @@ def play_level(master_word, answers):
   return player_input
 
 def setup_level(n):
-  master_word = scramble_word(words_and_answers[n]["word"])
+  master_word = scramble(words_and_answers[n]["word"])
   answers = words_and_answers[n]["answers"]
 
   points['total possible'] += calculate_possible_points(answers)
