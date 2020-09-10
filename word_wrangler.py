@@ -21,7 +21,7 @@ def scramble(word):
   scrambled = scrambled.join(chars)
   return scrambled
 
-# Will display the appropriate number of available words to find, plus any correctly guessed hidden words so far
+# Displays the appropriate number of available words to find, plus any correctly guessed hidden words so far
 # Called each time for words of varying lengths (so called once for hidden words of length 3, then again for hidden words of length 4, etc.)
 def display_words(word_length, answers):
   # First, figure out which correct guesses are the appropriate length to display
@@ -67,7 +67,7 @@ def display_progress(master_word, answers):
     length += 1
 
 # Appends a random word from the answers list to the correct_guesses list
-# Does this by generating a randint to use as a index from answers list
+# Does this by generating a randint to use as an index from answers list
 # By adding to correct_guesses, this means it will now be displayed in display_words
 def reveal_random_word(answers):
   while True:
@@ -86,8 +86,7 @@ def calculate_possible_points(answers):
     return possible_points
 
 # Runs each level, asking player for input and responding accordingly
-# Originally had a separate function for player input, but ran into trouble with scope and variables, particularly for player points, and figuring out how to break the loop if the player quits or beats the level.
-# Each time play_level is called, it also updates the player's point total, so their points will be tracked level to level.
+# Returns player_input so if player_input is a 'q', can use that to break out of game loop
 def play_level(master_word, answers):
 
   while True:
@@ -124,6 +123,8 @@ def play_level(master_word, answers):
 
   return player_input
 
+# Sets up the level, drawing from the words_and_answers dictionary, and runs it!
+# Continues to return the player_input so a 'q' can break the game loop
 def setup_level(n):
   master_word = scramble(words_and_answers[n]["word"])
   answers = words_and_answers[n]["answers"]
@@ -134,6 +135,7 @@ def setup_level(n):
   player_input = play_level(master_word, answers)
   return player_input
 
+
 ############# GAME INTRO ############
 
 print("\nWelcome to WORD WRANGLER!")
@@ -141,9 +143,6 @@ print("\nIn each round, you'll receive a scrambled MASTER WORD.")
 print("Try to find as many hidden words inside this word as you can!")
 print("\nEach hidden word is worth one point per letter.")
 print("\nIf you're stuck and you choose to reveal a hidden word, you'll lose its point value!\n")
-
-player_points = 0
-total_possible_points = 0
 
 while True:
   ready = input("Enter 'P' when you're ready to play! ")
@@ -153,7 +152,7 @@ while True:
 ############# RUN LEVELS ############
 
 n = 0
-while n < 3:
+while n < 5:
   correct_guesses = []
   player_input = setup_level(n)
   if player_input == 'q':
