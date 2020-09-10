@@ -111,7 +111,7 @@ def play_level(master_word, answers):
       print("\n Try again!\n")
 
     if len(correct_guesses) == len(answers):
-      display_progress(master_word, answers, current_points)
+      display_progress(master_word, answers)
       print("\n~~~~~~~~~~~~~~~~~~~~~~~\n")
       print("LEVEL COMPLETE!")
       print(f"\nYour score: {points['player']} out of {points['total possible']} possible points")
